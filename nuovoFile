@@ -1,0 +1,11 @@
+   const items = await navigator.clipboard.read();
+            const textBlob = await items[0].getType("text/plain");
+            let string = await (new Response(textBlob)).text();
+            let startID = string.indexOf('<svg');
+            if(startID===-1) return;
+            string = string.substring(startID,string.lastIndexOf('</svg>')+6);
+            const xmlDocument = new DOMParser().parseFromString( string ,"image/svg+xml").querySelector('svg');
+            let importInPlace = false;
+            if(_e.target.dataset.importInPlace ) importInPlace=true;
+            //activeApplication.unserializeDocument( xmlDocument , { import: true, shiftKey:shiftKey }  );
+            activeApplication.documentsManager.unserializeDocument( xmlDocument , { import: true, importInPlace:importInPlace }  );
