@@ -2,8 +2,62 @@
 <html>
 <head>
   <title>Test</title>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center; padding: 40px; }
+    canvas { border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
+
+  <canvas id="barChart" width="600" height="400"></canvas>
   <script src="test.js"></script>
+  <script>
+    const canvas = document.getElementById('barChart');
+    const ctx = canvas.getContext('2d');
+
+    const data = [
+      { label: 'Gennaio', value: 120 },
+      { label: 'Febbraio', value: 85 },
+      { label: 'Marzo', value: 200 },
+      { label: 'Aprile', value: 150 },
+      { label: 'Maggio', value: 95 },
+      { label: 'Giugno', value: 175 },
+    ];
+
+    const padding = 50;
+    const chartWidth = canvas.width - padding * 2;
+    const chartHeight = canvas.height - padding * 2;
+    const maxValue = Math.max(...data.map(d => d.value));
+    const barWidth = chartWidth / data.length * 0.6;
+    const gap = chartWidth / data.length;
+
+    // Assi
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, canvas.height - padding);
+    ctx.lineTo(canvas.width - padding, canvas.height - padding);
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Barre
+    data.forEach((item, i) => {
+      const barHeight = (item.value / maxValue) * chartHeight;
+      const x = padding + i * gap + (gap - barWidth) / 2;
+      const y = canvas.height - padding - barHeight;
+
+      ctx.fillStyle = '#4a90d9';
+      ctx.fillRect(x, y, barWidth, barHeight);
+
+      // Valore sopra la barra
+      ctx.fillStyle = '#333';
+      ctx.font = '13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(item.value, x + barWidth / 2, y - 6);
+
+      // Etichetta sotto
+      ctx.fillText(item.label, x + barWidth / 2, canvas.height - padding + 20);
+    });
+  </script>
 </body>
 </html>
